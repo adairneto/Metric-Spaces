@@ -1,0 +1,27 @@
+\documentclass[12pt,a4paper]{report}
+\input{../../LaTeX_Template/preamble.tex}
+
+% Title
+\author{\sffamily \href{https://github.com/adairneto}{Adair Antonio da Silva Neto}}
+\title{\sffamily \uppercase{Topology of Metric Spaces}}
+\date{\sffamily \today}
+
+% Setup
+\hypersetup{
+    colorlinks=false,
+    pdftitle={Topology of Metric Spaces},
+    pdfpagemode=FitH,
+}
+
+\begin{document}
+
+% Make title and TOC, start counting pages
+\maketitle
+\tableofcontents
+\thispagestyle{empty}
+\setcounter{page}{1}
+
+\include{01_metric}
+\include{02_topology}
+
+\end{document}

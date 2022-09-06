@@ -1,0 +1,168 @@
+\chapter{The Topology of Metric Spaces}
+
+\section{Open and Closed Sets}
+
+In this section, we introduce some topological concepts.
+
+\begin{definition}[Topology]
+    A \textbf{topology} on a set $X$ is a family $\tau$ of subsets of $X$ with the following properties:
+    \begin{itemize}
+        \item $\emptyset, X \in \tau$;
+        \item $A, B \in \tau \implies A \cap B \in \tau$;
+        \item $\mathcal{U} \subseteq \tau \implies \bigcup \mathcal{U} \in \tau$.
+    \end{itemize}
+
+    The pair $(X, \tau)$ is called a \textbf{topological space} and its members are called the \textbf{open sets} of $X$ with respect to $\tau$.
+\end{definition}
+
+To put it another way, a topological space is closed under finite intersections and arbitrary unions.
+
+\begin{definition}[Open and Closed Sets]
+    Let $(M, \mathrm{d})$ be a metric space. A subset $A \subset M$ is said to be \textbf{open} if, for all $p \in A$, there exists $\varepsilon > 0$ such that $B(p, \varepsilon) \subset A$.
+
+    A set $F \subset M$ is said to be \textbf{closed} if $F^c = M \setminus F$ is open.
+\end{definition}
+
+Intuitively, a set is open if all of its points fit loosely inside it.
+
+Remark that if $A \neq \emptyset$ is an open set, then $A$ is a union of open balls. And if $A$ is a union of open balls, then $A$ is an open set.
+
+The next proposition asserts that the collection of open sets of a metric space is a topology over $M$, called the \textbf{topology induced by a metric}.
+
+\begin{proposition}\label{prop:opens-topology}
+    Let $\mathcal{A}$ be the collection of all open sets of a metric space $(M, \mathrm{d})$. Then
+    \begin{enumerate}
+        \item $\emptyset, M \in \mathcal{A}$;
+        \item $X, Y \in \mathcal{A} \implies X \cap Y \in \mathcal{A}$;
+        \item If $(X_i)$ is a family of open sets of $M$, i.e., each $X_i \in \mathcal{A}$, then $\bigcup X_i \in \mathcal{A}$.
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    \begin{enumerate}
+        \item $\emptyset, M \in \mathcal{A}$ trivially.
+        \item Let $X, Y \in \mathcal{A}$ and $p \in X \cap Y$. 
+        
+        Since $X$ is open, there exists $\varepsilon_1 > 0$ such that $B(p, \varepsilon_1) \subset X$.
+
+        Since $Y$ is open, there exists $\varepsilon_2 > 0$ such that $B(p, \varepsilon_2) \subset Y$.
+
+        Take $\varepsilon = \min \{ \varepsilon_1, \varepsilon_2 \}$. Given that $B(p, \varepsilon) \subset B(p, \varepsilon_1) \cap B(p, \varepsilon_2)$, we know that $B(p, \varepsilon) \subset X \cap Y$. Hence, $X \cap Y$ is an open set of $\mathcal{A}$.
+
+        \item Let $\{ X_i \}_{i \in I} \subset \mathcal{A}$ and $X = \bigcup_{i \in I} X_i$. Taking $p \in X$, there exists $i \in I$ such that $p \in X_i$. Therefore, there is $\varepsilon > 0$ such that $B(p, \varepsilon) \subset X_1 \subset X$. Thus, $X$ is an open set of $\mathcal{A}$.
+    \end{enumerate}
+\end{proof}
+
+Equivalent metrics determine the same topological structure.
+
+\begin{proposition}
+    Let $\mathrm{d}$ and $\mathrm{d}'$ be equivalent metrics over $M$. If $\mathcal{A}$ is a collection of open sets of $(M, \mathrm{d})$ and $\mathcal{A}'$ is a collection of open sets of $(M, \mathrm{d}')$, then $\mathcal{A} = \mathcal{A}'$.
+\end{proposition}
+
+\begin{proof}
+    Let $\mathcal{A} \subset \mathcal{A}'$ and $A \in \mathcal{A}$. Given $p \in A$, there exists $\varepsilon > 0$ such that $B_{\mathrm{d}}(p, \varepsilon) \subset A$.
+
+    Since $d \sim d'$, there exists $\delta > 0$ such that
+    \[
+        B_{\mathrm{d}'}(p, \delta) \subset B_{\mathrm{d}}(p, \varepsilon)
+    \]
+
+    Hence, $B_{\mathrm{d}'}(p, \delta) \subset A$ and, therefore, $A \in \mathcal{A}'$.
+\end{proof}
+
+\begin{definition}[Interior Point]
+    Let $(M, \mathrm{d})$ be a metric space and $A \subset M$. A point $p \in A$ is called an \textbf{interior point} of $A$ if there exists $\varepsilon > 0$ such that $B(p, \varepsilon) \subset A$. The set of interior points of $A$ is called the \textbf{interior} of $A$.
+\end{definition}
+
+With this definition, an equivalent notion of open sets follows: a set $A$ is open iff. every point of $A$ is interior.
+
+\begin{proposition}
+    Let $\mathcal{F}$ be the collection of all closed sets of a metric space $(M, \mathrm{d})$. Then
+    \begin{enumerate}
+        \item $\emptyset, M \in \mathcal{F}$;
+        \item $X, Y \in \mathcal{F} \implies X \cup Y \in \mathcal{F}$;
+        \item If $(X_i)$ is a family of open sets of $M$, i.e., each $X_i \in \mathcal{F}$, then $\bigcap X_i \in \mathcal{F}$.
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    \begin{enumerate}
+        \item $\emptyset, M \in \mathcal{F}$ trivially.
+        \item $X, Y \in \mathcal{F} \implies X^c, Y^c \in \mathcal{A} \implies X^c \cap Y^c \in \mathcal{A} \implies (X \cup Y)^c \in \mathcal{A} \implies X \cup Y \in \mathcal{F}$.
+        \item $\{ X_i \}_{i \in I} \subset \mathcal{F} \iff \{ X_i^c \}_{i \in I} \subset \mathcal{A} \implies \bigcup_{i \in I} X_i^c \in \mathcal{A} \implies \bigcap_{i \in I} X_i \in \mathcal{F}$.
+    \end{enumerate}
+\end{proof}
+
+\section{Adherence, Accumulation and Closure}
+
+This section investigates when a point is `close' to a set.
+
+\begin{definition}[Adherent point]
+    Let $A \subset M$. A point $p \in M$ is called an \textbf{adherent point} of $A$ if, for all $\varepsilon > 0$, we have
+    \[
+        B(p, \varepsilon) \cap A \neq \emptyset
+    \]
+
+    The set of all adherent points of $A$ is called the \textbf{closure} of $A$ and is denoted by $\overline{A}$.
+\end{definition}
+
+The intuition behind this definition is that every neighborhood of $p$ contains at least one point of $A$.
+
+\begin{proposition}
+    The complement of the closure equals the interior of the complement, i.e.,
+    \[
+        (\overline{A})^c = \text{int}(A^c)
+    \]
+\end{proposition}
+
+\begin{corollary}
+    A set is closed iff. it is equal to its closure.
+\end{corollary}
+
+\begin{proposition}
+    Let $(M, \mathrm{d})$ be a metric space. If $p \in M$ and $A \subset M$, then $\mathrm{d}(p, A) = 0$ iff. $p \in \overline{A}$.
+\end{proposition}
+
+\begin{proposition}
+    For all non-empty subsets $A$ of $M$, we have $\mathrm{d}(A) = \mathrm{d}(\overline{A})$.
+\end{proposition}
+
+A closure is a set plus its `boundary'. Naturally, the boundary of a set $A$ is formed by the points $p \in M$ such that every open ball centered on $p$ contains at least one point of $A$ and one point of the complement $M \setminus A$.
+
+\begin{definition}[Boundary]
+    Let $(M, \mathrm{d})$ be a metric space and $A \subset M$. The \textbf{boundary} (or \textbf{frontier}) of $A$ is the set
+    \[
+        \partial A = \{ p \in M : B(p, \varepsilon) \cap A \neq \emptyset \text{ and } B(p, \varepsilon) \cap (M \setminus A) \neq \emptyset, \, \forall \varepsilon > 0 \}
+    \]
+\end{definition}
+
+\begin{proposition}
+    Let $(M, \mathrm{d})$ be a metric space and $A \subset M$. Then $\overline{A} = A \cup \partial A$.
+\end{proposition}
+
+\begin{proposition}
+    Let $(M, \mathrm{d})$ be a metric space. If $A \subset M$ and $p \in \overline{A}$, then there exists a sequence $(x_n)$ of points in $A$ such that $\lim x_n = p$.
+\end{proposition}
+
+\begin{definition}[Dense]
+    Given a metric space $(M, \mathrm{d})$, a subset $A \subset M$ is said to be \textbf{dense} in $M$ if $\overline{A} = M$.
+\end{definition}
+
+The idea here is that for all points $p \in M$ there exists another point $a \in A$ arbitrarily close to $p$. An example: $\mathbb{Q}$ is dense in $\mathbb{R}$.
+
+\begin{proposition}
+    Let $M$ be a metric space. If $A \subset M$ is dense in $M$, then $G \cap A \neq \emptyset$ for all open set $G \neq \emptyset$ of this space.
+\end{proposition}
+
+\begin{definition}[Accumulation point]
+    Let $A \subset M$. A point $p \in M$ is called an \textbf{accumulation point} of $A$ if $p$ is an adherent point of $A \setminus \{ p \}$, i.e., for all $\varepsilon > 0$, we have that
+    \[
+        B(p, \varepsilon) \cap A \setminus \{ p \} \neq \emptyset
+    \]
+
+    The set of accumulation points of $A$ is called \textbf{derived set} of $A$ and is denoted by $A'$.
+\end{definition}
+
+\begin{proposition}
+    A set $F \subset M$ is closed iff. $F' \subset F$.
+\end{proposition}

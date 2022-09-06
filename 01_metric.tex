@@ -1,0 +1,962 @@
+\chapter{Metrics}
+
+\section{Basic Definitions}
+
+What is a metric space? It is simply a set equipped with a notion of distance. 
+
+\begin{definition}[Metric Space]
+Given a non-empty set $M$, a \textbf{metric} over $M$ is a function
+\[
+	\mathrm{d} : M \times M \longrightarrow [0, \infty)
+\] 
+satisfying, for all $x, y, z \in M$:
+\begin{itemize}
+	\item[M1.] $\mathrm{d}(x,y) = 0 \iff x = y$
+	\item[M2.] $\mathrm{d}(x,y) = \mathrm{d}(y,x)$
+	\item[M3.] $\mathrm{d}(x,y) \leq \mathrm{d}(x,z) + d(z,y)$
+\end{itemize}
+Under these conditions, each image $\mathrm{d}(x,y)$ is called the \textbf{distance} from $x$ to $y$, and a set $M$ equipped with a metric $\mathrm{d}$ is called \textbf{metric space}, which we'll denote by $(M,\mathrm{d})$.
+\end{definition}
+
+Intuitively, a distance should be positive, only be zero when it is the distance to itself, the `going' distance should be equal to the `return' distance, and if you pass somewhere in the way, the distance cannot be lower (triangle inequality).
+
+This metric induces a topology on the set, called \textbf{metric topology}. A topological space whose topology comes from some metric is called \textbf{metrizable}.
+
+If $S \subsetneq M$, then considering the restriction $\mathrm{d}_1 = \left.\mathrm{d}\right|_S$, we obtain another metric space $(S, \mathrm{d}_1)$ which is called a \textbf{subspace} of $M$, and the metric $\mathrm{d}_1$ is induced by $\mathrm{d}$ over $M$.
+
+\begin{example}[Discrete (or zero-one) metric]
+	Given any non-empty set $M$, define
+	\begin{equation*}
+	  \mathrm{d}(x,y)=\begin{cases}
+	    1, & \text{if $x \neq y$}\\
+	    0, & \text{if $x = y$}
+	  \end{cases}
+	\end{equation*}
+	
+	The space obtained by this metric is called \textbf{discrete space}.
+
+	Notice that $M1.$ and $M2.$ are immediate. To prove $M3.$, we have two cases. If $x = y$, then
+	\[
+		\mathrm{d}(x,y) = 0 \leq \underset{\geq 0}{\mathrm{d}(x,y)} + \underset{\geq 0}{\mathrm{d}(z,y)}
+	\]
+
+	On the other hand, if $x \neq y$, then either $x \neq z$ or $y \neq z$. Suppose w.l.o.g. $x \neq z$. Then
+	\[
+		\mathrm{d}(x,y) = 1 = \mathrm{d}(x,z) \leq \underset{\geq 0}{\mathrm{d}(x,z)} + \underset{\geq 0}{\mathrm{d}(z,y)}
+	\]
+\end{example}
+
+\begin{example}[Real Line]
+	Let $M = \mathbb{R}$ and define $\mathrm{d}(x,y) = | x - y |$. This is called the \textbf{usual metric on $\mathbb{R}$}.
+\end{example}
+
+Before heading on, we'll first need the Cauchy-Schwarz inequality.
+
+\begin{lemma}[Cauchy-Schwarz Inequality]
+Let $x, y \in \mathbb{R}^n$. Then,
+\begin{equation}\label{eq:cs_in_1}
+	\sum_{i=1}^n |x_i \cdot y_i| \leq \left( \sum_{i=1}^n x_i^2 \right)^{\frac{1}{2}} \left( \sum_{i=1}^n y_i^2 \right)^{\frac{1}{2}}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+	If $x_1 = \ldots = x_n = 0$ or $y_1 = \ldots = y_n = 0$, then \eqref{eq:cs_in_1} is trivial.
+
+	Now notice that, for all $r, s \in \mathbb{R}_{\geq 0}$, we have
+	\begin{equation}\label{eq:cs_in_1_aux}
+		2rs \leq r^2 + s^2
+	\end{equation}
+	since
+	\[
+		2rs \leq r^2 + s^2 \iff r^2 - 2rs + s^2 \geq 0 \iff (r - s)^2 \geq 0
+	\]
+
+	Fix $l, k \in \textbf{N}$ satisfying $1 \leq l, k \leq n$, such that $x_l$ and $y_k$ are non-zero. And define
+	\[
+		p = \left( \sum_{i=1}^n |x_i|^2 \right)^{1/2} \, \text{ and } \, q = \left( \sum_{i=1}^n |y_i|^2 \right)^{1/2}
+	\]
+	Since both are non-zero, we also define
+	\[
+		r = \frac{|x_i|}{p} \, \text{ and } \, s = \frac{|y_i|}{q}
+	\]
+
+	Then, for $1 \leq i \leq n$,
+	\begin{equation*}
+		2rs = 2 \frac{|x_i|}{p} \frac{|y_i|}{q} \leq \frac{|x_i|^2}{p^2} + \frac{|y_i|^2}{q^2}
+	\end{equation*}
+	I.e.,
+	\begin{equation*}
+		2 \sum_{i=1}^n \frac{|x_i \cdot y_i|}{pq} \leq \sum_{i=1}^n \frac{|x_i|^2}{p^2}  + \sum_{i=1}^n \frac{|y_i|^2}{q^2}
+	\end{equation*}
+
+	Using that $|x_i|^2 = p^2$ and $|y_i|^2 = q^2$, we have
+	\begin{equation*}
+		\frac{2}{pq} \sum_{i=1}^n |x_i \cdot y_i| \leq \frac{p^2}{p^2} + \frac{q^2}{q^2} = 2
+	\end{equation*}
+
+	Hence,
+	\begin{equation*}
+		\sum_{i=1}^n |x_i \cdot y_i| \leq pq
+	\end{equation*}
+\end{proof}
+
+\begin{example}[$\mathbb{R}^n$ Space]
+	There are three somewhat equivalent metrics on $\mathbb{R}^n$, defined as follows
+	\begin{equation*}
+		\begin{aligned}
+			\mathrm{d}_1(x,y) &= \sum_{i=1}^n |x_i - y_i| \\
+			\mathrm{d}_2(x,y) &= \left(\sum_{i=1}^n (x_i - y_i)^2 \right)^{1/2} \\
+			\mathrm{d}_\infty(x,y) &= \max_{1 \leq i \leq n}{|x_i - y_i|}
+		\end{aligned}
+	\end{equation*}
+	The metric $\mathrm{d}_2$ is known as the \textbf{Euclidean metric}.
+
+	Notice that $M1.$ and $M2.$ are verified immediately by these metrics. To show that $M3.$ holds,
+	\begin{equation*}
+		\begin{aligned}
+			\mathrm{d}_1(x,y) &= \sum_{i=1}^n |x_i - y_i| = \sum_{i=1}^n |(x_i - z_i) + (z_i - y_i)| \\
+			&\leq \sum_{i=1}^n |x_i - z_i| + \sum_{i=1}^n |z_i - y_i| = \mathrm{d}_1(x,z) + \mathrm{d}_1(z,y)
+		\end{aligned}
+	\end{equation*}
+	The case for $\mathrm{d}_\infty(x,y)$ is analogous. For $\mathrm{d}_2(x,y)$,
+	\begin{equation*}
+		\begin{aligned}
+			\mathrm{d}_2^2(x,y) &= \sum_{i=1}^n (x_i - y_i)^2 = \sum_{i=1}^n [(x_i - z_i) + (z_i - y_i)]^2 \\
+			&= \sum_{i=1}^n [(x_i - z_i)^2 + 2(x_i - z_i)(z_i - y_i) + (z_i - y_i)^2] \\
+			&\leq \mathrm{d}_2^2(x,y) + \mathrm{d}_2^2(z,y) + 2 \sum_{i=1}^n |x_i - z_i||z_i - y_i| \\
+			&= \mathrm{d}_2^2(x,y) + \mathrm{d}_2^2(z,y) + 2 \mathrm{d}_2(x,y)\mathrm{d}_2(z,y) \\
+			&= [\mathrm{d}_2(x,z) + \mathrm{d}_2(z,y)]^2
+		\end{aligned}
+	\end{equation*}
+
+	Thus,
+	\[
+		\mathrm{d}_2(x,y) \leq \mathrm{d}_2(x,z) + \mathrm{d}_2(z,y)
+	\]
+\end{example}
+
+\begin{lemma}[Relationship between $\mathbb{R}^n$ metrics]
+	For all $x,y \in \mathbb{R}^n$,
+	\begin{equation*}
+		\mathrm{d}_{\infty}(x,y) \leq \mathrm{d}_2(x,y) \leq \mathrm{d}_1(x,y) \leq nd_\infty (x,y)
+	\end{equation*}
+\end{lemma}
+
+\begin{proof}
+	\begin{equation*}
+		\begin{aligned}
+			\mathrm{d}_\infty(x,y) &= \max_{1 \leq i \leq n}{|x_i - y_i|} = |x_l - y_l| = \sqrt{(x_l - y_l)^2} \leq \sqrt{\sum_{i=1}^n (x_i - y_i)^2} = \mathrm{d}_2(x,y) \\
+			\mathrm{d}_1^2(x,y) &= \left( \sum_{i=1}^n |x_i - y_i| \right)^2 = \sum_{i=1}^n |x_i - y_i|^2 + \underbrace{2 \sum_{1 \leq j < k \leq n} |x_j - y_j| |x_k - y_k|}_{\geq 0} \geq \mathrm{d}_2^2(x,y) \\
+			\mathrm{d}_1(x,y) &= \sum_{i=1}^n |x_i - y_i| \leq \sum_{i=1}^n \max_{1 \leq j \leq n} |x_j - y_j| = n \mathrm{d}_\infty(x,y)
+		\end{aligned}
+	\end{equation*}
+\end{proof}
+
+\begin{proposition}[An additional inequality]
+	Let $(M,\mathrm{d})$ be a metric space and $x,y \in M$. Then
+	\begin{equation*}
+		|\mathrm{d}(x,y) - \mathrm{d}(x,z)| \leq \mathrm{d}(y,z)
+	\end{equation*}
+\end{proposition}
+
+\begin{proof}
+	\begin{equation*}
+		\begin{aligned}
+			|\mathrm{d}(x,y) - \mathrm{d}(x,z)| \leq \mathrm{d}(y,z) &\iff \begin{cases}
+				\mathrm{d}(x,y) - \mathrm{d}(x,z) & \leq \mathrm{d}(y,z) \\
+				-\mathrm{d}(x,y) + \mathrm{d}(x,z) & \leq \mathrm{d}(y,z) 
+			\end{cases} \\
+			&\iff \begin{cases}
+				\mathrm{d}(x,y) \leq \mathrm{d}(y,z) + \mathrm{d}(x,z) \\
+				\mathrm{d}(x,z) \leq \mathrm{d}(y,z) + \mathrm{d}(x,y)
+			\end{cases}
+		\end{aligned}
+	\end{equation*}
+	which are true since they're both the triangular inequality.
+\end{proof}
+
+\begin{definition}[Normed vector spaces]
+	Given a vector space $V$ over $\mathbb{R}$, we say that a function $\| \cdot \|$ is a \textbf{norm} over $V$ if, given $u, v \in V$ and $\lambda \in \mathbb{R}$ we have
+	\begin{itemize}
+	\item[N1.] $\| v \| \geq 0$, and $\| v \| = 0 \iff v = 0$.
+	\item[N2.] $\| \lambda v \| = |\lambda| \| v \|$.
+	\item[N3.] $\| u + v \| \leq \| u \| + \| v \|$.
+	\end{itemize}
+	Then $V$ has a metric given by $\mathrm{d}(u,v) = \| u - v \|$, called the \textbf{metric induced by the norm $\| \cdot \|$}. And a vector space equipped with a norm is called a \textbf{normed vector space}.
+\end{definition}
+
+\begin{example}[$\mathbb{R}^n$ as a Normed Vector Space]
+	The space $\mathbb{R}^n$ with any of the norms	
+	\begin{equation*}
+		\begin{aligned}
+			\| x \|_1 &= \sum_{i=1}^n |x_i| \\
+			\| x \|_2 &= \sqrt{\sum_{i=1}^n x_i^2} \\
+			\| x \|_\infty &= \max_{1 \leq i \leq n} |x_i|
+		\end{aligned}
+	\end{equation*}	
+	is a normed vector space. In fact,
+	\[
+		\mathrm{d}_1(x,y) = \| x- y \|_1; \, \mathrm{d}_2(x,y) = \| x - y \|_2; \, \mathrm{d}_\infty (x,y) = \| x- y \|_\infty
+	\]
+\end{example}
+
+\begin{definition}[Inner Product]\label{def:inner-product}
+	Let $V$ be a vector space over $\mathbb{R}$. Then a function $\langle \cdot, \cdot \rangle : V \times V \longrightarrow \mathbb{R}$ is called a \textbf{inner product} if, for any $a, b, c \in V$ and $\lambda \in \mathbb{R}$, the following conditions hold:
+	\begin{enumerate}
+		\item[P1.] $\langle \lambda a, b \rangle = \lambda \langle a, b \rangle$;
+		\item[P2.] $\langle a + b, c \rangle = \langle a, c \rangle + \langle b, c \rangle$;
+		\item[P3.] $\langle a, b \rangle = \langle b, a \rangle$;
+		\item[P4.] $\langle a, a \rangle > 0$ if $a \neq 0$.
+	\end{enumerate}
+\end{definition}
+
+\begin{lemma}[Cauchy-Schwarz Inequality with Inner Product]\label{cauchy-schwarz-ip}
+	Let $V$ be a vector space over $\mathbb{R}$ with inner product $\langle \cdot, \cdot \rangle$. Then, for all $u, v \in V$,
+	\begin{equation*}
+		|\langle u, v \rangle| \leq \| u \| \| v \|
+	\end{equation*}
+\end{lemma}
+
+\begin{proof}
+	To prove this inequality, notice that
+	\begin{equation*}
+		\begin{aligned}
+			0 \leq \| u + \lambda v \|^2 &= \langle u + \lambda v, u + \lambda v \rangle \\
+			&= \langle u, u \rangle + \langle u, \lambda v \rangle + \langle \lambda v, u \rangle + \langle \lambda v, \lambda v \rangle \\
+			&= \| u \|^2 + 2 \lambda \langle u, v \rangle + \lambda^2 \| v \|^2
+		\end{aligned}
+	\end{equation*}
+	
+	Since this norm is non-negative,
+	\[
+		\Delta = 4 \langle u, v \rangle^2 - 4 \|u \|^2 \|v \|^2 \leq 0
+	\]
+	
+	Hence,
+	\[
+		\langle u, v \rangle^2 \leq \| u \|^2 \| v \|^2 \iff | \langle u, v \rangle | \leq \| u \| \|v \|
+	\]
+\end{proof}
+
+\begin{proposition}[Norm induced by inner product]
+	Given a vector space $V$ with inner product $\langle \cdot, \cdot \rangle$, the function $\| \cdot \| : V \longrightarrow \mathbb{R}$ defined as $\| a \| = \sqrt{\langle a, a \rangle}$, where $a \in V$, is a norm, which is called the \textbf{norm induced by the inner product}.
+\end{proposition}
+
+\begin{proof}
+	N1. $ \| u \| = 0 \iff \sqrt{\langle u, u \rangle} = 0 \iff \langle u, u \rangle = 0 \overset{\text{\hyperref[def:inner-product]{(P4)}}}{\iff} u = 0$.
+	
+	N2. $\| \lambda u \| = \sqrt{\langle \lambda u, \lambda v \rangle} = \sqrt{\lambda^2 \langle u, u \rangle} = | \lambda | \| u \|$.
+	
+	N3. \begin{equation*}
+		\begin{aligned}
+			\| u + v \|^2 &= \langle u+v, u+v \rangle = \| u \|^2 + \| v \|^2 + 2 \langle u, v \rangle \\
+			&\leq \| u \|^2 + \| v \|^2 + 2 | \langle u, v \rangle | \leq \| u \|^2 + \| v \|^2 + 2 \| u \| \| v \| \\
+			&= (\|u\| + \|v\|)^2
+		\end{aligned}
+	\end{equation*}
+\end{proof}
+
+Hence, every vector space equipped with inner product is a normed vector space (the converse is not true) and therefore is also a metric space.
+\[
+	\underbrace{\langle \cdot, \cdot \rangle}_\text{Inner Product} \xrightarrow{\text{induces}}  \underbrace{\sqrt{\langle v, v \rangle}}_{\text{Norm } \| v \|} \xrightarrow{\text{induces}} \underbrace{\| u - v \|}_{\text{Metric } \mathrm{d}(u,v)}
+\]
+
+\begin{proposition}[Bounded real functions]\label{bdd-real-fun}
+	Given a set $X \neq \varnothing$, a function $f : \longrightarrow \mathbb{R}$ is said to be \textbf{bounded} if there exists $k \in \mathbb{R}$ such that $|f(x)| < k$ for all $x \in X$. We'll use $\mathcal{B}(X; \mathbb{R})$ to denote the space of bounded functions from $X$ to $\mathbb{R}$.
+	
+	For any $f, g \in \mathcal{B}(X; \mathbb{R})$ and $c \in \mathbb{R}$, we define
+	\begin{equation*}
+		\begin{aligned}
+			(f+g)(x) &= f(x) + g(x), \, \forall x \in X \\
+			(cf)(x)  &= cf(x), \, \forall x \in X \\
+			\| f \|  &= \sup \{|f(x)| : x \in X \}
+		\end{aligned}
+	\end{equation*}
+	
+	Then the set $\mathcal{B}(X; \mathbb{R})$ is a normed vector space.
+	
+	Notice that the metric induced by this norm is the function
+\[
+	\mathrm{d}(f,g) = \sup \{ |f(x) - g(x)| : x \in X \}, \, \forall f, g \in \mathcal{B}(X; \mathbb{R})
+\]
+\end{proposition}
+
+\begin{proof}
+	N1. $0 = \| f \| = \sup \{ |f(x)| : x \in X \} \iff |f(x)| \leq 0 \iff f(x) = 0$.
+	
+	N2. $\| \lambda f \| = \sup \{ |\lambda f(x)| : x \in X \} = |\lambda| \sup \{|f(x)| : x \in X \} = |\lambda| \| f \|$.
+	
+	N3. Since
+	\begin{equation*}
+		\begin{aligned}
+			|f(x) + g(x)| \leq |f(x)| + |g(x)| \leq \sup \{ |f(t)| : t \in X \} + \sup \{ |g(t) : t \in X \} 
+			= \|f\| + \| g \|
+		\end{aligned}
+	\end{equation*}
+	we have that
+	\begin{equation*}
+		\begin{aligned}
+			\|f\| + \| g \| = \sup \{ |f(x) + g(x)| : x \in X \} \leq \sup \{ \|f\| + \| g \| : x \in X \} 
+			= \|f\| + \| g \|
+		\end{aligned}
+	\end{equation*}
+\end{proof}
+
+\begin{proposition}[Continuous real functions on a closed interval]
+	Denote by $\mathcal{C}[a,b]$ the set of continuous real functions defined on $[a,b]$. With respect to the addition of functions and scalar multiplication as defined in the \hyperref[last proposition]{bdd-real-fun}, $\mathcal{C}[a,b]$ is a vector space over $\mathbb{R}$ and the function
+	\begin{equation*}
+		\| f \| = \int_a^b |f(x)| ~\mathrm{\mathrm{d}}x
+	\end{equation*}
+	is a norm over this space. And we have the following metric:
+	\begin{equation*}
+		\mathrm{d}(f,g) = \int_a^b | f(x) - g(x) | ~\mathrm{\mathrm{d}}x, \, \forall f,g \in \mathcal{C}[a,b]
+	\end{equation*}
+\end{proposition}
+
+\begin{proof}
+	We begin by the two easiest ones.
+	
+	N2. $\| \lambda f \| = \int_a^b |\lambda f(x)| ~\mathrm{d}x = |\lambda| \int_a^b |f(x)| ~\mathrm{d}x = |\lambda| \| f \|$.
+	
+	N3. $\| f + g\| = \int_a^b |f(x) - g(x)| ~\mathrm{d}x \leq \int_a^b (|f(x)| + |g(x)|) ~\mathrm{d}x = \| f \| + \| g \|$.
+	
+	N1. If $f$ is zero, then the property follows trivially. Therefore, suppose that $f$ is non-zero, i.e., there exists $x_0 \in [a,b]$ such that $f(x_0) \neq 0$. 
+	
+	Taking $\varepsilon = |f(x_0)|/2$, by the continuity of $f$ in $x_0$, there exists $\delta > 0$ such that
+	\[
+		x \in (x_0 - \delta, x_0 + \delta) \implies |f(x) - f(x_0)| < \varepsilon = \frac{|f(x_0)|}{2}
+	\]
+	
+	If $x \in [a,b] \cap (x_0 - \delta, x_0 + \delta) = [c,d]$, then
+	\[
+		|f(x)| = |f(x_0) + (f(x) - f(x_0))| \geq |f(x_0)| - |f(x) - f(x_0)| \geq |f(x_0)| - \frac{|f(x_0)|}{2} = \frac{|f(x_0)|}{2}
+	\]
+	
+	Hence, for $x \in [c,d]$,
+	\[
+		\| f \| = \int_a^b |f(x)| ~\mathrm{d}x \geq \int_c^d |f(x)| ~\mathrm{d}x \geq \int_c^d \frac{|f(x_0)|}{2} ~\mathrm{d}x = \frac{|f(x_0)|}{2} (d-c) > 0
+	\]
+\end{proof}
+
+Remark that since every continuous real function is bounded, we have that $\mathcal{C}[a,b]$ is a subset of $\mathcal{B}([a,b]; \mathbb{R})$. Then $\mathcal{C}[a,b]$ is also a metric space with respect to the metric
+\[
+	\mathrm{d}(f,g) = \sup \{ |f(x) - g(x)| : x \in [a,b] \}, \, \forall f,g, \in \mathcal{C}[a,b]
+\]
+
+\begin{example}[Product Metric]
+	Let $(M_1, \mathrm{d}_1), \ldots, (M_n, \mathrm{d}_n)$ be metric spaces. Then we define over $M_1 \times \cdot \times M_n$ the \textbf{product metric} as
+	\begin{equation*}
+		\begin{aligned}
+			D_1(x,y) &= \sum_{i=1}^n \mathrm{d}_i (x_i,y_i) \\
+			D_2(x,y) &= \sqrt{\sum_{i=1}^n \mathrm{d}_i^2 (x_i,y_i)} \\
+			D_\infty(x,y) &= \max_{1 \leq i \leq n} \mathrm{d}_i(x_i,y_i)
+		\end{aligned}
+	\end{equation*}
+	where $x = (x_1, \ldots, x_n), y = (y_1, \ldots, y_n) \in M$.
+	
+	\textbf{Exercise.} Show that $D_1, D_2, D_\infty$ are metrics over $M$.
+\end{example}
+
+\section{Distance between points and sets, Distance between two sets}
+
+Recall from elementary geometry that the distance from a point $p$ to a plane $\pi$ is the measure of the segment $pq$, where $q$ is the intersection of $\pi$ and the line passing through $p$ and orthogonal to $\pi$. 
+
+\begin{definition}[Distance between points and sets]
+	Let $(M, \mathrm{d})$ be a metric space. Given $p \in M$ and $A \subset M$, $A \neq \varnothing$, we define the \textbf{distance} from $p$ to the set $A$, which we denote by $\mathrm{d}(p, A)$, as the following non-negative real number
+	\begin{equation*}
+		\mathrm{d}(p, A) = \inf \{ \mathrm{d}(p,x) : x \in A \}
+	\end{equation*}
+	
+	Note that this distance exists, given the fact that the set $\mathrm{d}(p,x)$ is lower bounded by zero.
+\end{definition}
+
+\begin{example}
+	Consider the usual metric over $\mathbb{R}$. If $p = 0$ and $A = \left\{ 1, 1/2, 1/3, \ldots \right\}$, then $\mathrm{d}(p,A) = 0$.
+	
+	This is an ellucidative example because it shows that it is possible to have $\mathrm{d}(p,A) = 0$ and $p \not\in A$. However, if $p \in A$, then $\mathrm{d}(p,A)$.
+\end{example}
+
+\begin{proposition}
+	Let $(M,\mathrm{d})$ be a metric space. If $A \subset M$, $A \neq \varnothing$, and $p, q \in M$, then
+	\begin{equation*}
+		| \mathrm{d}(p, A) - \mathrm{d}(q, A) | \leq \mathrm{d}(p,q)
+	\end{equation*}
+\end{proposition}
+
+\begin{proof}
+	Let $x \in A$. Then
+	\[
+		\mathrm{d}(p,A) \leq \mathrm{d}(p,x) \leq \mathrm{d}(p,q) + \mathrm{d}(q,x)
+	\]
+	I.e., $\mathrm{d}(p,x) - \mathrm{d}(p,q) \leq \mathrm{d}(q,x)$.
+	
+	Since this is valid for every $x \in A$, we obtain that $\mathrm{d}(p,x) - \mathrm{d}(p,q) \leq \mathrm{d}(q,A)$
+	
+	Hence,
+	\[
+		\mathrm{d}(p,x) - \mathrm{d}(q,A) \leq \mathrm{d}(p,q)
+	\]
+\end{proof}
+
+\begin{definition}[Distance between sets]
+	Let $(M,\mathrm{d})$ be a metric space. Given two non-empty subsets $A, B$ of $M$, we define the \textbf{distance} between $A$ and $B$, denoted by $\mathrm{d}(A, B)$, as the non-negative real number
+	\begin{equation*}
+		\mathrm{d}(A,B) = \inf \{ \mathrm{d}(x,y) : x \in A, y \in B \}
+	\end{equation*}
+\end{definition}
+
+\begin{example}
+	Consider $\mathbb{R}^2$ equipped with Euclidean metric. The distance between $A = \{ (x,y) \in \mathbb{R}^2 : y = 0 \}$ and $B = \{ (x,y) \in \mathbb{R}^2 : xy = 1 \}$ is zero.
+	
+	Note that $A \cap B \neq \varnothing$ implies $\mathrm{d}(A,B) = 0$. Nonetheless, it is possible to have $\mathrm{d}(A,B) = 0$ with $A \cap B = \varnothing$.
+\end{example}
+
+\begin{definition}[Bounded set and diameter]
+	Let $A \subseteq M$, $A \neq \varnothing$. If there exists $k \in \mathbb{R}$ such that $\mathrm{d}(x,y) < k$ for all $x, y \in A$, then the set $A$ is said to be a \textbf{bounded set}.
+	
+	And its \textbf{diameter} $\mathrm{d}(A)$ is defined as
+	\[
+		\mathrm{d}(A) = \sup \{ \mathrm{d}(x,y) : x,y \in A \}
+	\]
+	If $A$ is not bounded, we define $\mathrm{d}(A) = \infty$.
+\end{definition}
+
+\begin{example}
+	Consider $\mathbb{R}^2$ equipped with Euclidean metric. Then the diameter of $A = \{ (x,y) \in \mathbb{R}^2 : x^2 + y^2 < 1 \}$ is equal to two.
+	
+	To show this, let $p,q \in A$. Note that
+	\[
+		\mathrm{d}_2(p,q) \leq \mathrm{d}_2(p,0) + \mathrm{d}_2(0,q) = \| p \|_2 + \| q \|_2 < 1 + 1 = 2
+	\]
+	
+	Define $p_n = \left( -1 + 1/n, 0 \right)$ and $q_n = \left( 1 - 1/n, 0 \right) \in A$. Then
+	\[
+		\mathrm{d}_2(p_n, q_n) = \sqrt{\left( 2 - \frac{2}{n}\right)^2} = 2 \left( 1 - \frac{1}{n} \right)
+	\]
+	
+	Therefore,
+	\begin{equation*}
+		\begin{aligned}
+			\mathrm{d}(A) &= \sup \{ \mathrm{d}_2(x,y) : x, y \in A \} \geq \sup \{ \mathrm{d}_2(p_n, q_n) : n \in \mathbb{N} \} \\
+			&= \sup \{ 2(1-1/n) : n \in \mathbb{N} \} = 2
+		\end{aligned}
+	\end{equation*}
+	
+	Thus, $\mathrm{d}(A) = 2$.
+\end{example}
+
+\section{Open balls}
+
+\begin{definition}[Open and Closed Balls]
+	Let $(M, \mathrm{d})$ be a metric space, $p \in M$, and $r$ be a positive real number. The \textbf{open ball} of center $p$ and radius $r$, denoted by $B(p, r)$ or $B_r^M(p)$, is the following subset of $M$:
+	\[
+		B(p, r) = \{ x \in M : \mathrm{d}(x, p) < r \}
+	\]
+
+	And the \textbf{closed ball} of center $p$ and radius $r$ is the set
+	\[
+		B_r^M[p] = \{ x \in M : \mathrm{d}(x, p) \leq r \}
+	\]
+\end{definition}
+
+\begin{example}
+	Consider over $M$ the metric zero-one. For $0 < \varepsilon \leq 1$,
+	\[
+		B(p, \varepsilon) = \{ x \in M : \mathrm{d}(p,x) < \varepsilon \} = \{ p \}
+	\]
+	
+	However, for $\varepsilon > 1$,
+	\[
+		B(p, \varepsilon) = \{ x \in M: \mathrm{d}(p,x) < \varepsilon \} = M
+	\]
+\end{example}
+	
+\begin{definition}[Isolated point]
+	A point $p \in M$ is said to be an \textbf{isolated point} of $M$ if there exists $r > 0$ such that $B(p,r) = \{ p \}$.
+\end{definition}
+
+\begin{example}
+	Consider the metric space $(\mathbb{R}, \mathrm{d})$, where $\mathrm{d}(x,y) = | x - y | $. Then
+	\begin{equation*}
+		\begin{aligned}
+			\mathrm{d}(p,x) < \varepsilon &\iff |p-x| < \varepsilon \iff -\varepsilon < x - p < \varepsilon \\
+			&\iff p - \varepsilon < x < p + \varepsilon \iff x \in (p-\varepsilon, p+\varepsilon)
+		\end{aligned}
+	\end{equation*}
+	
+	Hence, $B(p, \varepsilon) = (p - \varepsilon, p + \varepsilon)$.
+\end{example}
+
+\begin{example}
+	Consider the metric space $(\mathbb{R}^2, \mathrm{d})$ and let $p = (p_1, p_2)$.
+	
+	If $\mathrm{d} = \mathrm{d}_2$,
+	\[
+		B(p, \varepsilon) = \{ (x_1, x_2) \in \mathbb{R}^2 : (x_1 - p_1)^2 + (x_2 - p_2)^2 < \varepsilon^2 \}
+	\]
+	i.e., the open ball $B(p, \varepsilon)$ is the circle with center $p$ and radius $\varepsilon$.
+	
+	If $\mathrm{d} = \mathrm{d}_1$,
+	\[
+		B(p, \varepsilon) = \{ (x_1, x_2) \in \mathbb{R}^2 : |x_1 - p_1| + |x_2 - p_2| < \varepsilon \}
+	\]
+	
+	If $\mathrm{d} = \mathrm{d}_\infty$,
+	\begin{equation*}
+		\begin{aligned}
+		B(p, \varepsilon) &= \{ (x_1, x_2) \in \mathbb{R}^2 : \max \{ |x_1 - p_1|, |x_2 - p_2| \} < \varepsilon \} \\
+		&= \{ (x_1, x_2) \in \mathbb{R}^2 : |x_1 - p_1| < \varepsilon, \text{ and } |x_2 - p_2| < \varepsilon \} \\
+		&= (p_1 - \varepsilon, p_1 + \varepsilon) \times (p_2 - \varepsilon, p_2 + \varepsilon)
+		\end{aligned}
+	\end{equation*}
+\end{example}
+
+\begin{proposition}
+	Let $(M_1, d_1), \ldots, (M_n, d_n)$ be metric spaces. Consider over $M = M_1 \times \ldots \times M_n$ the metric $D_\infty$. Then for all $a = (a_1, \ldots a_n) \in M$, we have
+	\[
+		B(a, r) = B(a_1, r) \times \ldots \times B(a_n, r)
+	\]
+\end{proposition}
+
+\begin{proof}
+	Let $p \in M$. Then
+	\begin{equation*}
+		\begin{aligned}
+			p \in B(a, \varepsilon) &\iff \max \{ \mathrm{d}_1(p_1, a_1), \ldots, \mathrm{d}_n(p_n, a_n) \} < \varepsilon \\
+			&\iff \mathrm{d}_i(p_i, a_i) < \varepsilon, \, \text{ for all } i = 1, 2, \ldots, n \\
+			&\iff p_i \in B(a_i, \varepsilon), \, \text{ for all } i = 1, 2, \ldots, n \\
+			&\iff p \in B(a_1, \varepsilon) \times \ldots \times B(a_n, \varepsilon)
+		\end{aligned}
+	\end{equation*}
+\end{proof}
+
+\begin{theorem}[Basic Properties]
+	Let $B(p, r)$ be open balls of an arbitrary metric space $(M, d)$.
+	\begin{itemize}
+		\item[(P1)] Given $B(p, \varepsilon)$ and $B(p, \delta)$, if $\varepsilon \leq \delta$, then $B(p, \varepsilon) \subseteq B(p, \delta)$.
+		\item[(P2)] Given $q \in B(P, \varepsilon)$, there exists $\delta > 0$ such that \[ B(q, \delta) \subset B(p, \varepsilon) \]
+		\item[(P3)] Let $B(p, \varepsilon)$ and $B(q, \delta)$ be non-disjoint balls. If $t \in B(p, \varepsilon) \cap B(q, \delta) $, then there exists $\lambda > 0$ such that \[ B(t, \lambda) \subset B(p, \varepsilon) \cap B(q, \delta) \]
+		\item[(P4)] Let $p$ and $q$ be two distinct points of $M$. If $d(p,q) = \varepsilon$, then \[ B \left( p, \frac{\varepsilon}{2} \right) \cap B \left( q, \frac{\varepsilon}{2} \right) = \varnothing \]
+		\item[(P5)] Given two open balls $B(p, \varepsilon)$ and $B(q, \delta)$, if $\varepsilon + \delta \leq d(p,q)$, then \[ B(p, \varepsilon) \cap B(q, \delta) = \varnothing \]
+		\item[(P6)] The diameter of a ball $B(p, \varepsilon)$ is lesser or equal to $2 \varepsilon$, i.e. $d(B(p, \varepsilon))  \leq 2 \varepsilon$.
+	\end{itemize}
+\end{theorem}
+
+\begin{proof}
+	\begin{itemize}
+		\item[(P1)] Is immediate.
+
+		\item[(P2)] Take $\delta = \varepsilon - \mathrm{d}(p,q)$. Then $x \in B(q, \delta) \iff \mathrm{d}(q,x) < \delta$. Now notice that
+		\[
+			\mathrm{d}(p,x) \leq \mathrm{d}(p,q) + \mathrm{d}(q,x) < d(p,q) + \varepsilon - \mathrm{d}(p,q) = \varepsilon
+		\]
+		i.e., $x \in B(p, \varepsilon)$.
+
+		\item[(P3)] Follows directly from (P2).
+		
+		\item[(P4)] Suppose, by contradiction, that there exists $x \in B(p, \varepsilon/2) \cap B(q, \varepsilon/2)$. Then, $\mathrm{d}(p,x) < \varepsilon/2$ and $\mathrm{d}(q,x) < \varepsilon/2$. Therefore, \[ \varepsilon = \mathrm{d}(p,q) \leq \mathrm{d}(p,x) + \mathrm{d}(q,x) < \frac{\varepsilon}{2} + \frac{\varepsilon}{2} = \varepsilon \]
+		
+		\item[(P5)] Also arguing by contradiction, suppose that there exists $x \in B(p, \delta) \cap B(q, \varepsilon)$. T hen, $\mathrm{d}(p,x) < \delta$ and $\mathrm{d}(q,x) < \varepsilon$. Therefore, \[ \delta + \varepsilon \leq \mathrm{d}(p,q) \leq \mathrm{d}(p,x) + \mathrm{d}(q,x) < \delta + \varepsilon \]
+		
+		\item[(P6)] If $x,y \in B(p, \varepsilon)$, then $\mathrm{d}(p,x) < \varepsilon$ and $\mathrm{d}(p,y) < \varepsilon$. Therefore, \[ \mathrm{d}(x,y) \leq d(x,p) + d(p,y) < 2 \varepsilon \] Hence,
+		\[
+			\mathrm{d}(B(p,\varepsilon)) = \sup \{ \mathrm{d}(x,y) : x,y \in M \} \leq \sup \{ \mathrm{d}(p,x) + \mathrm{d}(p,y) : x,y \in M \} \leq 2 \varepsilon
+		\]
+	\end{itemize}
+\end{proof}
+
+\begin{proposition}
+	Let $(V, \| \cdot \|)$ be a real normed vector space and $\mathrm{d}(x,y) = \| x - y \|$, $x,y \in V$. Then, for all $p \in V$ and $\varepsilon > 0$, $\mathrm{d}(B(p, \varepsilon)) = 2 \varepsilon$.
+\end{proposition}
+
+\begin{proof}
+	Suppose that $\mathrm{d}(B(p, \varepsilon)) = \delta < \varepsilon$ and let $0 < \delta < \lambda < 2 \varepsilon$. Take $u \neq 0 \in V$ and define 
+	\[
+		v = p + \frac{\lambda}{2 \| u \|}u \text{ and } w = p - \frac{\lambda}{2 \| u \|}u
+	\]
+	Then,
+	\[
+		\mathrm{d}(v, w) = \left\| \frac{\lambda}{\| u \|} u \right\| = \lambda, \, \mathrm{d}(p,v) = \left\| \frac{\lambda}{2 \| u \|} u \right\| = \frac{\lambda}{2}, \, \mathrm{d}(p,w) = \frac{\lambda}{2}
+	\]
+
+	Hence, $\mathrm{d}(p,v) < \varepsilon$ and $\mathrm{d}(p,w) < \varepsilon$. I.e., $v, w \in B(p, \varepsilon)$, implying that $\mathrm{d}(B(p, \varepsilon)) > \delta$.
+\end{proof}
+
+\begin{proposition}
+	Let $(M_1, \mathrm{d}_1), \ldots, (M_n, \mathrm{d}_n)$ be metric spaces and $M = M_1 \times \cdot \times M_n$, and let $D = D_\infty$ the metric given by 
+	\[
+		D(x,y) = \max \{ \mathrm{d}_1(x_1,y_1), \ldots, \mathrm{d}_n(x_n, y_n) \}
+	\]
+	where $x = (x_1, \ldots, x_n), y = (y_1, \ldots, y_n) \in M$. Then for $p \in M$ and $\varepsilon > 0$,
+	\[
+		B_D(p, \varepsilon) = B_{\mathrm{d}_1}(p_1, \varepsilon) \times \cdots \times B_{\mathrm{d}_n}(p_n, \varepsilon)
+	\]
+\end{proposition}
+
+\begin{proof}
+	By a simple computation,
+	\begin{equation*}
+		\begin{aligned}
+			B_D(p, \varepsilon) &= \{ x \in M : D(p,x) < \varepsilon \} \\
+								&= \{ (x_1, \ldots, x_n) \in M : \mathrm{d}_i(p_i, x_i) < \varepsilon, \forall 1 \leq i \leq n \} \\
+								&= \{ (x_1, \ldots, x_n) \in M : x_i \in B_{\mathrm{d}_i}(p_i, \varepsilon), \forall 1 \leq i \leq n \} \\
+								&= B_{\mathrm{d}_1}(p_1, \varepsilon) \times \cdots \times B_{\mathrm{d}_n}(p_n, \varepsilon)
+		\end{aligned}
+	\end{equation*}
+\end{proof}
+
+\section{Equivalent Norms and Metrics}
+
+Consider two metricts $\mathrm{d}$ and $\mathrm{d}'$, not necessarily equal, over the same set $M$. To avoid confusion, we use $B_\mathrm{d}(p, \varepsilon)$ to denote a ball under the metric $\mathrm{d}$ and $B_{\mathrm{d}'}(p, \varepsilon)$ for a ball under the metric $\mathrm{d}'$.
+
+\begin{definition}[Equivalent metrics]
+	The metrics $\mathrm{d}$ and $\mathrm{d}'$, over the same set $M$, are said to be \textbf{equivalent metrics} if, for all $p \in M$,
+	\begin{enumerate}
+		\item For any open ball $B_\mathrm{d}(p, \varepsilon)$, there exists $\lambda > 0$ such that $B_{\mathrm{d}'}(p, \lambda) \subseteq B_\mathrm{d}(p, \varepsilon)$.
+		\item For any open ball $B_{\mathrm{d}'}(p, \varepsilon)$, there exists $\lambda > 0$ such that $B_{\mathrm{d}}(p, \lambda) \subseteq B_{\mathrm{d}'}(p, \varepsilon)$.
+	\end{enumerate}
+
+	If $\mathrm{d}$ and $\mathrm{d}'$ are equivalent, we write $\mathrm{d} \sim \mathrm{d}'$.
+\end{definition}
+
+Note that, by definition and the property (P2), it follows that if $\mathrm{d}$ and $\mathrm{d}'$ are equivalent metrics, then every ball $B_\mathrm{d}(p,\varepsilon)$ is an union of balls $B_{\mathrm{d}'}(p_i, \varepsilon_i)$ and vice-versa.
+
+\begin{proposition}
+	Consider two metrics $\mathrm{d}$ and $\mathrm{d}'$ over $M$. If there exists two positive real numbers $r, s$ satisfying
+	\[
+		r\mathrm{d}(x,y) \leq \mathrm{d}'(x,y) \leq s\mathrm{d}(x,y)
+	\]
+	for all $x,y \in M$, then $\mathrm{d} \sim \mathrm{d}'$.
+\end{proposition}
+
+\begin{proof}
+	Let $\varepsilon > 0$ and $p \in M$. We want to show that 
+	\[
+		B_{\mathrm{d}'}(p, \varepsilon r) \subseteq B_\mathrm{d}(p, \varepsilon) \text{ and } B_\mathrm{d}(p, \varepsilon/s) \subseteq B_{\mathrm{d}'}(p,\varepsilon)
+	\]
+
+	Take $x \in B_{\mathrm{d}'}(p, \varepsilon r)$. Then $\mathrm{d}'(p, x) < \varepsilon r$, i.e.,
+	\[
+	    r\mathrm{d}(p,x) < \varepsilon r \iff \mathrm{d}(p,x) < \varepsilon
+	\]
+	Hence, $x \in B_\mathrm{d}(p, \varepsilon)$.
+
+	Now take $x \in B_\mathrm{d}(p, \varepsilon / s)$. Then $\mathrm{d}(p,x) < \varepsilon/s$, i.e.,
+	\[
+		\mathrm{d}'(p,x) \leq sd(p,x) < \varepsilon
+	\]
+	Therefore, $x \in B_{\mathrm{d}'}(p, \varepsilon)$.
+\end{proof}
+
+\begin{example}
+	The Euclidean metric and the maximum metric in $\mathbb{R}^2$ are equivalent.
+\end{example}
+
+\begin{definition}[Equivalent norms]
+	Two norms $\| \cdot \|$ and $\| \cdot \|'$ over the same vector space $V$ are said to be \textbf{equivalent} if the metrics induced by these norms are equivalent.
+\end{definition}
+
+\begin{proposition}
+	Two norms $\| \cdot \|$ and $\| \cdot \|'$ over the same vector space $V$ are equivalent if, and only if, there exist $r, s \in \mathbb{R}_{\geq 0}$ such that 
+	\[
+		r \| u \| \leq \| u \|' \leq s \| u \|
+	\]
+	for all $u \in V$.
+\end{proposition}
+
+\begin{proof}
+	One way is directly guaranteed by the previous result. Now suppose that both norms are equivalent. Then there exists $\lambda > 0$ such that
+	\[
+		B_{\mathrm{d}'}(0, \lambda) \subseteq B_\mathrm{d}(0,1)
+	\]
+	
+	Let $u \neq 0 \in V$ and $0 < r < \lambda$. Notice that for $u = 0$ the claim is trivial. Then,
+	\[
+		\left\| \frac{r}{\| u \|'} u \right\|' = r < \lambda \implies \frac{r}{\| u \|'} u \in B_{\mathrm{d}'}(0, \lambda) \implies \frac{r}{\| u \|'} u \in B_\mathrm{d}(0,1)
+	\]
+	I.e., 
+	\[
+		\left\| \frac{r}{\| u \|'} u \right\| < 1 \iff \frac{r}{\| u \|'} \| u \| < 1 \iff r \| u \| < \| u \|'
+	\]
+
+	Conversely, let $\lambda > 0$ such that
+	\[
+		B_\mathrm{d}(0,\lambda) \subseteq B_{\mathrm{d}'}(0, 1)
+	\]
+	and let $u \neq 0 \in V$ and $0 < r < \lambda$. Then,
+	\[
+		\left\| \frac{r}{\| u \|} u \right\| = r < \lambda \implies \frac{r}{\| u \|} u \in B_{\mathrm{d}}(0, \lambda) \implies \frac{r}{\| u \|} u \in B_{\mathrm{d}'}(0,1)
+	\]
+	I.e.,
+	\[
+		\left\| \frac{r}{\| u \|} u \right\|' < 1 \iff \frac{r}{\| u \|} \| u \|' < 1 \iff \| u \|' < \frac{1}{r} \| u \|
+	\]
+	Taking $s = 1/r$ the proof is completed.
+\end{proof}
+
+\begin{example}
+	The norms given by 
+	\begin{equation*}
+		\begin{aligned}
+			\| f \|  &= \sup \{ |f(x)| : x \in [0,1] \} \\
+			\| f \|' &= \int_0^1 |f(x)| ~\mathrm{d}x
+		\end{aligned}
+	\end{equation*}
+	defined over $\mathcal{C}[0,1]$ are not equivalent.
+\end{example}
+
+\section{Sequences in Metric Spaces}
+
+\subsection{The Limit of a Sequence}
+
+Recall that a sequence is a family $(x_n)_{n \in \mathbb{N}}$ of points of $M$.
+
+\begin{definition}[Limit of a sequence]
+	Let $(M,d)$ be a metric space. A point $p \in M$ is the \textbf{limit} of a sequence $(x_n)$ if, for every $\varepsilon > 0$, there exists $n_0 \in \mathbb{N}$ such that
+	\[
+		n \geq n_0 \implies x_n \in B(p, \varepsilon)
+	\]
+
+	Then we say that $(x_n)$ is a \textbf{convergent sequence} and that $(x_n)$ \textbf{converges} to $p$. We denote this by $\lim x_n = p$ or $x_n \longrightarrow p$. 
+\end{definition}
+
+This definition can be written in the following equivalent way.
+
+\begin{proposition}
+	A sequence $(x_n) \in M$ converges to $p \in M$ if, and only if, for all $\varepsilon > 0$, there exists $n_0 \in \mathbb{N}$ such that 
+	\[
+		n \geq n_0 \implies \mathrm{d}(x_n, p) < \varepsilon
+	\]
+\end{proposition}	
+
+\begin{proof}
+	\[
+		x_n \in B(p, \varepsilon) \iff \mathrm{d}(x_n, p) < \varepsilon
+	\]
+\end{proof}
+
+\begin{example}
+	Consider the set of continuous functions $\mathcal{C}[a,b]$ with the supremum metric, and let $f, f_n:[a,b] \longrightarrow \mathbb{R}$ be defined as follows:
+	\[
+		f_n(x) = \frac{1}{n} \text{ and } f(x) = 0, \, \forall x \in [a,b]
+	\]
+
+	Then
+	\begin{equation*}
+		\begin{aligned}
+			\mathrm{d}(f,f_n) 	&= \sup \{ \mathrm{d}(f(x),f_n(x)) : x \in [a,b] \} \\
+								&= \sup \{|f(x) - f_n(x) : x \in [a,b] \} \\
+								&= \frac{1}{n} \longrightarrow 0 \text{ as } n \to \infty
+		\end{aligned}
+	\end{equation*}
+\end{example}
+
+\begin{example}[Stationary sequence]
+	Let $M \neq \varnothing$ equipped with the zero-one metric and suppose that $(x_n)$ converges to $p \in M$.
+
+	For $\varepsilon = 1/2$, there exists $r \in \mathbb{N}$ such that
+	\[
+		n \geq r \implies \mathrm{d}(x_n,p) < \varepsilon = \frac{1}{2}
+	\]
+
+	I.e., $x_n = p$ for all $n \geq r$. This sequence is called \textbf{stationary}.
+\end{example}
+
+\begin{proposition}[Uniqueness of the limit]
+	If a sequence $(x_n)$ over a metric space $M$ converges, then its limit is unique.
+\end{proposition}
+
+\begin{proof}
+	By contradiction, suppose that $\lim x_n = p$ and $\lim x_n = q$, with $p \neq q$. Then take $\varepsilon = \mathrm{d}(p,q)/2 > 0$. Then there exists $r, s \in \mathbb{N}$ such that 
+	\[
+		n \geq r \implies \mathrm{d}(x_n, p) < \varepsilon
+	\]
+	\[
+		n \geq s \implies \mathrm{d}(x_n, q) < \varepsilon
+	\]
+
+	Take $t = \max \{r, s\}$. Then, for $n \geq t$, 
+	\[
+		\mathrm{d}(p,q) \leq \mathrm{d}(p, x_n) + \mathrm{d}(x_n, q) < 2 \varepsilon = \mathrm{d}(p,q)
+	\]
+\end{proof}
+
+\begin{proposition}
+	Let $\mathrm{d}$ and $\mathrm{d}'$ be equivalent metrics over $M$. Then a sequence $(x_n)$ of points in $M$ converges in the space $(M, \mathrm{d})$ to $p \in M$ if, and only if, this sequence also converges to $p$ in the space $(M, \mathrm{d}')$.
+\end{proposition}
+
+\begin{proof}
+	Suppose that $x_n \to p$ in $(M,d)$ and let $\varepsilon > 0$. Since $d \sim d'$, there exists $\delta > 0$ such that
+	\[
+		B_\mathrm{d}(p, \delta) \subset B_{\mathrm{d}'}(p,\varepsilon)
+	\]
+
+	Given that $x_n$ converges to $p$ in $(M,d)$, there exists $r \in \mathbb{N}$ such that $n \geq r$ implies $\mathrm{d}(x_n, p) < \delta$, i.e.,
+	\[
+		x_n \in B_\mathrm{d}(p, \delta) \subset B_{\mathrm{d}'}(p,\varepsilon) \implies \mathrm{d}'(x_n, p) < \varepsilon
+	\]
+
+	Therefore, $x_n \to p$ in $(M,\mathrm{d}')$. The reciprocal is analogous.
+\end{proof}
+
+\begin{proposition}[Subsequences converge to the same point]
+	If a sequence $(x_n) \in M$ converges to $p \in M$, then every subsequence of $(x_n)$ also converges to $p$.
+\end{proposition}
+
+\begin{proof}
+	Let $(x_{r_1}, x_{r_2}, \ldots)$ be a subsequence of the given sequence, and let $\varepsilon > 0$. From the hypothesis that $\lim x_n = p$, we know that there exists $k$ such that
+	\[
+		n \geq k \implies \mathrm{d}(x_n, p) < \varepsilon
+	\]
+
+	Note that each $r_i \in \mathbb{N}$ and $r_1 < r_2 < \ldots$. Hence, there exists $r_t > k$ and, therefore,
+	\[
+		r_i \geq r_t \implies \mathrm{d}(x_{r_i}, p) < \varepsilon
+	\]
+\end{proof}
+
+\begin{definition}[Bounded sequence]
+	A sequence $(x_n) \in M$ is \textbf{bounded} if there exists $k > 0$ such that $\mathrm{d}(x_r, x_s) < k$, for any $x_r, x_s$ in the set of terms $\{ x_n \}$.
+\end{definition}
+
+\begin{proposition}
+	Every convergent sequence is bounded.
+\end{proposition}
+
+\begin{proof}
+	Consider the convergent sequence $(x_n) \longrightarrow p$. Given the ball $B(p,1)$, there exists $r \in \mathbb{N}$ such that
+	\[
+		n \geq r \implies x_n \in B(p,1)
+	\]
+
+	Let $k > \max \{ \mathrm{d}(x_i, p) : i = 1, \ldots, r-1 \}$ and consider the ball $B(p, \varepsilon)$, where $\varepsilon = \max \{ 1, k \}$. Then every term of the sequence is contained in this ball and, therefore, for any $x_i, x_j$ in the sequence 
+	\[
+		\mathrm{d}(x_i, x_j) \leq \mathrm{d}(x_i, p) + \mathrm{d}(p, x_j) < 2 \varepsilon
+	\]
+\end{proof}
+
+\subsection{Sequences in a Product Space}
+
+Given a sequence of points of the form
+\[
+	((x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n), \ldots)
+\]
+how can we study the convergence of $((x_n, y_n))$ in terms of each sequence $(x_n)$ and $(y_n)$?
+
+\begin{proposition}
+	A sequence $((x_n, y_n))$ of points in the product space $M \times N$ converges to $(p,q) \in M \times N$ if, and only if, $x_n \longrightarrow p$ in $M$ and $y_n \longrightarrow q$ in $N$.
+\end{proposition}
+
+\begin{proof}
+	$(\Rightarrow)$ Let $\varepsilon > 0$. There exists $r \in \mathbb{N}$ such that
+	\[
+		n \geq r \implies D_1((x_n, y_n), (p, q)) = \mathrm{d}(x_n, p) + \mathrm{d}(y_n, q) < \varepsilon
+	\]
+	Hence,
+	\[
+		\mathrm{d}(x_n, p) < \varepsilon \text{ and } \mathrm{d}(y_n, q) < \varepsilon
+	\]
+	i.e., $\lim x_n = p$ and $\lim y_n = q$.
+
+	$(\Leftarrow)$ Let $\varepsilon > 0$. There exists $r, s \in \mathbb{N}$ such that
+	\[
+		n \geq r \implies \mathrm{d}(x_n, p) < \frac{\varepsilon}{2} \text { and } n \geq s \implies \mathrm{d}(y_n, q) < \frac{\varepsilon}{2}
+	\]
+
+	Take $t = \max\{r, s\}$. Then
+	\[
+		n \geq t \implies D_1((x_n, y_n), (p, q)) = \mathrm{d}(x_n, p) + \mathrm{d}(y_n, q) < \varepsilon
+	\]
+	i.e., $(x_n, y_n) \longrightarrow (p,q)$.
+\end{proof}
+
+Note that this proposition can be immediately generalized to $n$ metric spaces.
+
+\begin{example}
+	The following sequence
+	\[
+		\left( (1,2), \left( \frac{1}{2}, 2 \right), \left( \frac{1}{3}, 2 \right), \ldots \right)
+	\]
+	converges in $\mathbb{R}^2$ to $(0,2)$.
+\end{example}
+
+\begin{example}
+	The sequence
+	\[
+		\left( (1,2), \left( \frac{1}{2}, 1 \right), \left( \frac{1}{3}, 2 \right), \left( \frac{1}{4}, 1 \right), \ldots \right)
+	\]
+	does not converge in $\mathbb{R}^2$, since the sequence of the second terms $(2,1,2,1, \ldots)$ does not converge in $\mathbb{R}$.
+\end{example}
+
+\subsection{Sequences in Normed Vector Spaces}
+
+\begin{proposition}
+	Every increasing or strictly increasing sequence such that the set of terms is upper bounded converges to the supremum of this set.
+\end{proposition}
+
+Analogously, every decreasing or strictly decreasing sequence such that the set of terms is lower bounded converges to the infimum of this set.
+
+\begin{proposition}[Sign conservation]
+	Let $(x_n)$ be a sequence in $\mathbb{R}$.
+	\begin{itemize}
+		\item If $\lim x_n = p > 0$, then there exists an index $r$ and a constant $c > 0$ such that $x_n > c$ for all $n \geq r$.
+		\item If $\lim x_n = p < 0$, then there exists an index $r$ and a constant $c < 0$ such that $x_n < c$ for all $n \geq r$.
+	\end{itemize}
+\end{proposition}
+
+\begin{proposition}
+	Let $(x_n)$ be a sequence in a normed vector space $V$ which converges to $p \in V$. Then there exists a ball centered in origin containing all terms of the sequence.
+\end{proposition}
+
+\begin{definition}
+	Let $f = (x_n)$ and $g = (y_n)$ be sequences in a normed vector space $V$. We define the \textbf{sum} of $f$ and $g$ as the sequence
+	\[
+		f + g = (x_1 + y_1, \ldots, x_n + y_n, \ldots)
+	\]
+
+	If $k = (c_n)$ is a sequence of elements in $\mathbb{R}$, then the \textbf{product} $k \cdot f$ is defined as 
+	\[
+		k \cdot f = (c_1 x_1, \ldots, c_n x_n, \ldots)
+	\]
+\end{definition}
+
+\begin{proposition}
+	Let $(x_n)$ and $(y_n)$ be two sequences in a normed vector space $V$. If $\lim x_n = p$ and $\lim y_n = q$, then $\lim (x_n + y_n) = p + q$.
+\end{proposition}
+
+\begin{corollary}
+	If $(x_n)$ and $(y_n)$ are convergent sequences of real numbers satisfying $x_n \leq y_n$ from a given index $r$, then $\lim x_n \leq \lim y_n$.
+\end{corollary}
+
+\begin{proposition}
+	Let $(x_n) \longrightarrow p$ in a vector space $V$. If $(c_n)$ is a sequence of real numbers such that $\lim c_n = c \in \mathbb{R}$, then $\lim c_n x_n = c p$.
+\end{proposition}
+
+\begin{example}
+	Let $a$ be a real number such that $0 < a < 1$. We show that the sequence $(a, a^2, a^3, \ldots)$ converges to $0$. 
+
+	Since the sequence is strictly decreasing and the set of its terms is lower bounded by zero, the sequence converges in $\mathbb{R}$ and $\lim a^n = p = \inf \{ a^n : n = 1, 2, \ldots \}$.
+
+	Remark that
+	\[
+		(a, a^2, a^3, \ldots) = (a, a, a, \ldots) \cdot (1, a, a^2, \ldots)
+	\]
+	have the same limit. By the previous proposition,
+	\[
+		p = ap \iff p(1-a) = 0 \iff p = 0
+	\]
+
+	This result can be generalized as follows. If $a \in \mathbb{R}$ and $|a| < 1$, then $\lim |a|^n = 0$.
+\end{example}
+
+\begin{lemma}
+	If a sequence $(x_n)$ in a normed vector space converges to $p$, then the sequence $(\| x_n \|)$ converges to $\| p \|$.
+\end{lemma}
+
+\begin{proposition}
+	Let $(c_n)$ be a sequence in $\mathbb{R}$ satisfying $\lim c_n = c \neq 0$. Then the sequence $(d_n)$ defined by $d_n = 0$ if $c_n = 0$ and $d_n = 1/a_n$ for all $a_n \neq 0$, converges to $1/c$.
+\end{proposition}
+
+% Hygino 77, Aurichi 19
+
+% Homeomorphism: continuous, bijective function whose inverse is also continuous
