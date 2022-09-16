@@ -115,17 +115,63 @@ The intuition behind this definition is that every neighborhood of $p$ contains 
     \]
 \end{proposition}
 
+\begin{proof}
+    \begin{equation*}
+        \begin{aligned}
+            p \in (\overline{A})^c &\iff p \notin \overline{A} \\
+            &\iff \exists \varepsilon > 0 : B(p, \varepsilon) \cap A = \emptyset \\
+            &\iff \exists \varepsilon > 0: B(p, \varepsilon) \subset A^c \\
+            &\iff p \in \text{int}(A^c)
+        \end{aligned}
+    \end{equation*}
+\end{proof}
+
 \begin{corollary}
     A set is closed iff. it is equal to its closure.
 \end{corollary}
+
+\begin{proof}
+    We know that $F$ is closed iff. $F^c$ is open, which means that $\text{int}(F^c) = F^c$. By the preceeding proposition, $(\overline{F})^c = F^c$, i.e., $\overline{F} = F$.
+\end{proof}
 
 \begin{proposition}
     Let $(M, \mathrm{d})$ be a metric space. If $p \in M$ and $A \subset M$, then $\mathrm{d}(p, A) = 0$ iff. $p \in \overline{A}$.
 \end{proposition}
 
+\begin{proof}
+    $(\Rightarrow)$ Apply the definition of distance from a point to a set and equal it to zero. Show that there is $a \in A$ such that $a \in B(p, \varepsilon)$.
+
+    $(\Leftarrow)$ Suppose that the distance equals $\varepsilon > 0$. By hypothesis, there exists $a \in A$ such that $\mathrm{d}(a, p) < \varepsilon$ and derive a contradiction.
+\end{proof}
+
 \begin{proposition}
     For all non-empty subsets $A$ of $M$, we have $\mathrm{d}(A) = \mathrm{d}(\overline{A})$.
 \end{proposition}
+
+\begin{proof}
+    Since $A \subseteq \overline{A}$, it follows that $\mathrm{d}(A) \leq \mathrm{d}(\overline{A})$. Take $\varepsilon > 0$ and $x, y \in \overline{A}$.
+
+    Thus, there exists $a, b \in A$ such that 
+    \[
+        a \in B(x, \varepsilon/2) \text{ and } b \in B(y, \varepsilon/2)
+    \]
+    I.e.,
+    \[
+        \mathrm{d}(a,x) < \frac{\varepsilon}{2} \text{ and } \mathrm{d}(y,b) < \frac{\varepsilon}{2}
+    \]
+
+    By the triangular inequality,
+    \begin{equation*}
+        \begin{aligned}
+            \mathrm{d}(x,y) &\leq \mathrm{d}(x,a) + \mathrm{d}(a,y) \\
+            &\leq \mathrm{d}(x,a) + \mathrm{d}(a,b) + \mathrm{d}(b,y) \\
+            &< \frac{\varepsilon}{2} + \frac{\varepsilon}{2} + \mathrm{d}(a,b) \\
+            &< \mathrm{d}(A) + \varepsilon
+        \end{aligned}
+    \end{equation*}
+
+    Therefore, $\mathrm{d}(\overline{A}) < \mathrm{d}(A) + \varepsilon$, which means that $\mathrm{d}(\overline{A}) \leq \mathrm{d}(A)$. Hence, $\mathrm{d}(A) = \mathrm{d}(\overline{A})$.
+\end{proof}
 
 A closure is a set plus its `boundary'. Naturally, the boundary of a set $A$ is formed by the points $p \in M$ such that every open ball centered on $p$ contains at least one point of $A$ and one point of the complement $M \setminus A$.
 
@@ -140,19 +186,43 @@ A closure is a set plus its `boundary'. Naturally, the boundary of a set $A$ is 
     Let $(M, \mathrm{d})$ be a metric space and $A \subset M$. Then $\overline{A} = A \cup \partial A$.
 \end{proposition}
 
+\begin{proof}
+    Let $a \in \overline{A}$ and $a \notin A$. Using the definition of adherence point, we know that $a \in \partial A$.
+
+    Let $a \in A \cup \partial A$. If $a \in A$, then $a \in \overline{A}$. If $a \notin A$, then $a \in \partial A$, hence $a \in \overline{A}$.
+\end{proof}
+
 \begin{proposition}
     Let $(M, \mathrm{d})$ be a metric space. If $A \subset M$ and $p \in \overline{A}$, then there exists a sequence $(x_n)$ of points in $A$ such that $\lim x_n = p$.
 \end{proposition}
+
+\begin{proof}
+    For each $n \in \mathbb{N}$, let $x_n \in B(p, 1/n) \cap A$. I.e., $\mathrm{d}(p, x_n) < 1/n$. Given $\varepsilon > 0$, let $n_0 \in \mathbb{N}$ such that $1/n_0 < \varepsilon$. Then,
+    \[
+        n \geq n_0 \implies \mathrm{d}(p, x_n) < \frac{1}{n} \leq \frac{1}{n_0} < \varepsilon
+    \]
+\end{proof}
 
 \begin{definition}[Dense]
     Given a metric space $(M, \mathrm{d})$, a subset $A \subset M$ is said to be \textbf{dense} in $M$ if $\overline{A} = M$.
 \end{definition}
 
-The idea here is that for all points $p \in M$ there exists another point $a \in A$ arbitrarily close to $p$. An example: $\mathbb{Q}$ is dense in $\mathbb{R}$.
+The idea here is that for all points $p \in M$ there exists another point $a \in A$ arbitrarily close to $p$. E.g. $\mathbb{Q}$ is dense in $\mathbb{R}$.
 
 \begin{proposition}
     Let $M$ be a metric space. If $A \subset M$ is dense in $M$, then $G \cap A \neq \emptyset$ for all open set $G \neq \emptyset$ of this space.
 \end{proposition}
+
+\begin{proof}
+    Let $G$ be an open set and $p \in G$. There exists $\varepsilon > 0$ such that $B(p, \varepsilon) \subset G$. Since $A$ is dense in $M$,
+    \[
+        A \cap B(p, \varepsilon) \neq \emptyset \implies G \cap A \supset A \cap B(p, \varepsilon) \neq \emptyset
+    \]
+
+    Hence, $G \cap A \neq \emptyset$.
+\end{proof}
+
+The following definition adds a restriction to our definition of adherence point. This will be useful when studying limits and continuity.
 
 \begin{definition}[Accumulation point]
     Let $A \subset M$. A point $p \in M$ is called an \textbf{accumulation point} of $A$ if $p$ is an adherent point of $A \setminus \{ p \}$, i.e., for all $\varepsilon > 0$, we have that
@@ -163,6 +233,90 @@ The idea here is that for all points $p \in M$ there exists another point $a \in
     The set of accumulation points of $A$ is called \textbf{derived set} of $A$ and is denoted by $A'$.
 \end{definition}
 
+\begin{example} \hfill
+    \begin{enumerate}
+        \item $A \subset B \implies A' \subset B'$ and $(a,b)' = [a,b]$.
+        \item $A = [0,1] \cup \{ 2 \}$. Then $A' = [0,1]$.
+        \item $A = (0,1) \cap \mathbb{Q}$. Then $A' = [0,1]$.
+    \end{enumerate}
+\end{example}
+
+\begin{proposition}
+    Let $p$ be an accumulation point of a set $A$. Then every ball centered at $p$ has infinitely many points of $A$.
+\end{proposition}
+
+\begin{proof}
+    Suppose that there exists $\varepsilon > 0$ such that $B(p, \varepsilon) \cap A = \{ x_1, \ldots, x_n \}$, i.e., is a finite set.
+
+    Let
+    \[
+        (B(p, \varepsilon) \setminus \{ p \}) \cap A = \{ y_1, \ldots, y_m \}
+    \]
+    where $y_i \neq y_j$ for $i \neq j$. And define 
+    \[
+        \delta = \min \{ \mathrm{d}(p, y_j) : 1 \leq j \leq m \} > 0
+    \]
+
+    Therefore,
+    \[
+        (B(p, \delta) \setminus \{ p \}) \cap A = \emptyset
+    \]
+    implying that $p$ is not an accumulation point of $A$, which contradicts our hypothesis.
+\end{proof}
+
+\begin{example}
+    Let $M \neq \emptyset$ equipped with the zero-one metric. Let $A \subset M$ and $p \in M$. Then
+    \[
+        B(p, 1) = \{ p \} \text{ and } B(p, 1) \setminus \{ p \} = \emptyset
+    \]
+
+    Hence, $p$ is not an accumulation point of $A$, i.e., $A' = \emptyset$.
+\end{example}
+
+\begin{remark}
+    Let $(M, \mathrm{d})$ be a metric space, $A \subset M$ and $A$ finite. Then $A' = \emptyset$.
+\end{remark}
+
+\begin{proposition}
+    Let $(x_n)$ be a sequence of $(M, \mathrm{d})$ such that $A = \{ x_n : n \in \mathbb{N} \}$ has an accumulation point $p$. Then there exists a subsequence of $\{ x_n \}$ which converges to $p$.
+\end{proposition}
+
+\begin{proof}
+    For each $j \in \mathbb{N}$ define 
+    \[
+        C_j = B(p, 1/j) \cap A
+    \]
+    and notice that $C_j$ is infinite. Choose $x_{n_1} \in C_1$, $x_{n_2} \in C_2$ such that $x_{n_2} \neq x_{n_1}$ and $n_2 > n_1$.
+
+    Suppose that we already chose $x_{n_k} \in C_k$ such that $x_{n_i} \neq x_{n_l}$ for all $i \neq l$ and $n_1 < n_2 < \ldots < n_{k-1} < n_k$.
+
+    We now choose $x_{n_{k+1}}$ such that $x_{n_{k+1}} \in C_{k+1}$. $x_{n_{k+1}} \notin \{ x_{n_1}, \ldots, x_{n_k} \}$ and $n_{k+1} > n_k$.
+
+    By the induction principle, we construct a subsequence $(x_{n_j})_{j \in \mathbb{N}}$ of $(x_n)$.
+
+    And we have that
+    \[
+        x_{n_j} \in C_j \iff \mathrm{d}(p, x_{n_j}) < \frac{1}{j} \implies x_{n_j} \longrightarrow p \text{ as } j \to \infty
+    \]
+\end{proof}
+
 \begin{proposition}
     A set $F \subset M$ is closed iff. $F' \subset F$.
 \end{proposition}
+
+\begin{proof}
+    $(\Rightarrow)$ Suppose, by contradiction, that $F$ is closed, but $F' \not\subset F$. Therefore, there exists $p \in F'$ such that $p \notin F$. Then $p \in F' \setminus F = F' \cap F^c$.
+    
+    Since $F^c$ is open, there exists $\varepsilon > 0$ such that $B(p, \varepsilon) \subset F^c$. I.e., $B(p, \varepsilon) \cap F = \emptyset$. Hence, $p \notin F'$.
+
+    $(\Leftarrow)$ Let $p \in F^c$. Then $p \notin F$ and $p \notin F'$. Then there exists $\varepsilon > 0$ such that 
+    \[
+        (B(p, \varepsilon) \setminus \{ p \}) \cap F = \emptyset
+    \]
+
+    Since $p \notin F$, 
+    \[
+        B(p, \varepsilon) \cap F = \emptyset \implies B(p, \varepsilon) \subset F^c
+    \]
+    Hence, $F^c$ is open, i.e., $F$ is closed.
+\end{proof}
